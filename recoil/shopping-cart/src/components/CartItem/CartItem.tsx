@@ -1,14 +1,22 @@
 import { FC } from "react";
+import { useSetRecoilState } from "recoil";
 import { Product } from "types/product";
 import logoImg from "assets/logo.png";
 import styled from "styled-components";
+import { cartAtom } from "recoil/CartAtom";
 
 interface CartItemProps {
   data: Product;
 }
 
 const CartItem: FC<CartItemProps> = ({ data }) => {
-  const { title, price, description } = data;
+  const { id, title, price, description } = data;
+
+  const setCartItem = useSetRecoilState(cartAtom);
+  const deleteCartItem = () => {
+    setCartItem((prev) => prev.filter((i) => i.id !== id));
+  };
+
   return (
     <Wrapper>
       <div>
@@ -20,7 +28,7 @@ const CartItem: FC<CartItemProps> = ({ data }) => {
       </div>
       <RightWrapper>
         <Title>{`${price.toLocaleString()}원`}</Title>
-        <Button>삭제</Button>
+        <Button onClick={deleteCartItem}>삭제</Button>
       </RightWrapper>
     </Wrapper>
   );
