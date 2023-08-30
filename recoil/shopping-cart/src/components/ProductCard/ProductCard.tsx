@@ -1,21 +1,31 @@
-import React, { FC } from "react";
-import styled from "styled-components";
+import { FC } from "react";
+import { useRecoilState } from "recoil";
+import { cartAtom } from "recoil/CartAtom";
 import logoImg from "assets/logo.png";
-import { Product } from "../../types/product";
+import { Product } from "types/product";
+import styled from "styled-components";
 
 interface PrdProps {
   data: Product;
 }
-
 const ProductCard: FC<PrdProps> = ({ data }) => {
   const { id, title, price, description } = data;
+
+  const [cartItem, setCartItem] = useRecoilState(cartAtom);
+  const isItemInCart = (cartItem?.filter((i) => i.id === id).length || 0) > 0;
+  const addToCart = () => {
+    !isItemInCart && setCartItem((prev) => [...prev, data]);
+  };
+
   return (
     <Wrapper>
       <img width={276} height={276} src={logoImg} alt={`${id}의 더미이미지`} />
       <Price>{price.toLocaleString()}원</Price>
       <Title>{title}</Title>
       <SubText>{description}</SubText>
-      <Button>장바구니에 추가</Button>
+      <Button onClick={addToCart} disabled={isItemInCart}>
+        {isItemInCart ? "이미 추가된 상품" : "장바구니 담기"}
+      </Button>
     </Wrapper>
   );
 };
