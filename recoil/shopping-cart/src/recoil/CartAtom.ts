@@ -1,9 +1,12 @@
 import { atom, selector } from "recoil";
+import { recoilPersist } from "recoil-persist";
 import { Product } from "./../types/product";
 
+const { persistAtom } = recoilPersist();
 export const cartAtom = atom<Product[]>({
   key: "cartAtom",
   default: [],
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const totalQuantitySelector = selector({
