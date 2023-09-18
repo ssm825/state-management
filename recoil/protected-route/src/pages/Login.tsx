@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { TokenAtom } from "Recoil/TokenAtom";
@@ -9,14 +9,16 @@ const Login = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const setAccessToken = useSetRecoilState(TokenAtom);
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.redirectedFrom?.pathname || "/";
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios.post("/user/login", { id: id, pw: password }).then((res) => {
-      console.log(res.data);
       setAccessToken(res.data.accessToken);
-      navigate("/");
+      navigate(from);
     });
   };
 
