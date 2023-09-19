@@ -1,12 +1,21 @@
 import { Link } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLoginSelector, logoutSelector } from "Recoil/TokenAtom";
 import styled from "styled-components";
 
 const Home = () => {
+  const isLogin = useRecoilValue(isLoginSelector);
+  const [logout, setLogout] = useRecoilState(logoutSelector);
+
   return (
     <>
-      <Link to={"/login"}>
-        <Button>로그인</Button>
-      </Link>
+      {isLogin ? (
+        <Button onClick={() => setLogout(logout)}>로그아웃</Button>
+      ) : (
+        <Link to={"/login"}>
+          <Button>로그인</Button>
+        </Link>
+      )}
       <Link to={"/mypage"}>
         <Button>마이페이지</Button>
       </Link>
